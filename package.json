@@ -1,0 +1,25 @@
+{
+  "name": "autodey-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.26.2",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "build": "pnpm --filter @autodey/shared build && pnpm --filter @autodey/api build && pnpm --filter @autodey/web build",
+    "typecheck": "pnpm --filter @autodey/shared build && pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm --filter @autodey/shared build && pnpm -r test",
+    "seed": "pnpm --filter @autodey/api seed",
+    "load-test:bidding": "pnpm --filter @autodey/shared build && pnpm --filter @autodey/api load-test:bidding",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}
+

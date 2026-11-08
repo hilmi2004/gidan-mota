@@ -1,0 +1,68 @@
+{
+  "name": "listings_search_index",
+  "collectionName": "listings",
+  "database": "autodey",
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "title": {
+        "type": "string",
+        "analyzer": "lucene.standard",
+        "multi": {
+          "autocomplete": {
+            "type": "autocomplete",
+            "tokenization": "edgeGram",
+            "minGrams": 2,
+            "maxGrams": 15
+          }
+        }
+      },
+      "make": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "model": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "trim": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string",
+        "analyzer": "lucene.english"
+      },
+      "state": {
+        "type": "token"
+      },
+      "lga": {
+        "type": "token"
+      },
+      "condition": {
+        "type": "token"
+      },
+      "status": {
+        "type": "token"
+      },
+      "priceKobo": {
+        "type": "number"
+      },
+      "year": {
+        "type": "number"
+      },
+      "mileageKm": {
+        "type": "number"
+      }
+    }
+  },
+  "synonyms": [
+    {
+      "name": "nigerian_car_synonyms",
+      "analyzer": "lucene.standard",
+      "source": {
+        "collection": "vehicles"
+      }
+    }
+  ]
+}
+

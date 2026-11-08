@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.turbo/
+.env
+.env.local
+.local-mongo/
+coverage/
+playwright-report/
+test-results/
+*.log
+.DS_Store
+
+
+*.tsbuildinfo

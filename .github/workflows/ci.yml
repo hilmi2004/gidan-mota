@@ -1,0 +1,47 @@
+name: AutoDey CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.2
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @autodey/shared build
+
+      - name: Typecheck all workspaces
+        run: pnpm typecheck
+
+      - name: Lint all workspaces
+        run: pnpm lint
+
+      - name: Run unit & concurrency tests
+        run: pnpm test
+        env:
+          NODE_ENV: test
+          USE_LOCAL_EMBEDDED_INFRA: 'true'
+
+      - name: Build API and Web production bundles
+        run: pnpm build
+
