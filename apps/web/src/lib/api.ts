@@ -1,4 +1,5 @@
 import { useAppStore } from '../stores/useAppStore';
+import { resolveDemoApiFallback } from './demoFallbackData';
 
 export class ApiClientError extends Error {
   public readonly code: string;
@@ -28,11 +29,23 @@ export async function apiRequest<T>(
     headers.set('Authorization', `Bearer ${accessToken}`);
   }
 
-  const res = await fetch(`/api/v1${path}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+  let res: Response;
+  try {
+    res = await fetch(`/api/v1${path}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch {
+    // Offline or standalone static hosting fallback
+    return resolveDemoApiFallback<T>(path, options);
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    // Static SPA host (e.g. Vercel without external API proxy) returned text/html from rewrite
+    return resolveDemoApiFallback<T>(path, options);
+  }
 
   if (res.status === 401 && retry && refreshToken && !path.startsWith('/auth/')) {
     try {
@@ -78,4 +91,3 @@ export async function apiRequest<T>(
 
   return payload as T;
 }
-

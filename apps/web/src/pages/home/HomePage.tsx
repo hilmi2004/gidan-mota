@@ -41,9 +41,11 @@ export const HomePage: React.FC = () => {
       apiRequest<{ items: ListingSummaryItem[] }>('/search?limit=8'),
     ])
       .then(([aucRes, listRes]) => {
-        setAuctions(aucRes.items);
-        setFeaturedListings(listRes.items.filter((i) => !i.isAuction).slice(0, 8));
-        if (aucRes.serverTimeMs) {
+        const safeAuctions = Array.isArray(aucRes?.items) ? aucRes.items : [];
+        const safeListings = Array.isArray(listRes?.items) ? listRes.items : [];
+        setAuctions(safeAuctions);
+        setFeaturedListings(safeListings.filter((i) => !i.isAuction).slice(0, 8));
+        if (aucRes?.serverTimeMs) {
           setServerClockOffset(aucRes.serverTimeMs);
         }
       })
