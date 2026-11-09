@@ -387,13 +387,13 @@ export function DealerStorefrontPage(): React.ReactElement {
     0;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Dealer Banner & Header */}
       <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
-        <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 px-6 py-8 text-white">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 px-4 sm:px-6 py-6 sm:py-8 text-white">
+          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
             <div>
-              <div className="mb-2 flex flex-wrap items-center gap-2">
+              <div className="mb-2 flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <Badge variant="dealer_verified">
                   {(dealer.planTier || 'pro').toUpperCase()} DEALER
                 </Badge>
@@ -404,41 +404,41 @@ export function DealerStorefrontPage(): React.ReactElement {
                   </Badge>
                 )}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
                 {dealer.businessName}
               </h1>
-              <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-300">
-                <MapPin className="h-4 w-4 text-emerald-400" />
-                {dealer.address}, {dealer.lga}, {dealer.state}
+              <p className="mt-1 flex items-center gap-1.5 text-xs sm:text-sm text-slate-300">
+                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 shrink-0" />
+                <span>{dealer.address}, {dealer.lga}, {dealer.state}</span>
               </p>
               <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
-                <Clock className="h-3.5 w-3.5 text-emerald-400" />
-                {dealer.openingHours}
+                <Clock className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <span>{dealer.openingHours}</span>
               </p>
             </div>
 
             {/* Lead Stats */}
-            <div className="grid grid-cols-3 gap-3 rounded-xl border border-white/10 bg-white/5 p-3.5 text-center backdrop-blur">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 rounded-xl border border-white/10 bg-white/5 p-2.5 sm:p-3.5 text-center backdrop-blur w-full md:w-auto">
               <div>
-                <div className="flex items-center justify-center gap-1 text-xs text-slate-300">
+                <div className="flex items-center justify-center gap-1 text-[11px] sm:text-xs text-slate-300">
                   <Eye className="h-3.5 w-3.5 text-emerald-400" />
                   Views
                 </div>
-                <p className="mt-1 font-mono text-lg font-bold tabular-nums">{totalViews}</p>
+                <p className="mt-1 font-mono text-base sm:text-lg font-bold tabular-nums">{totalViews}</p>
               </div>
               <div>
-                <div className="flex items-center justify-center gap-1 text-xs text-slate-300">
+                <div className="flex items-center justify-center gap-1 text-[11px] sm:text-xs text-slate-300">
                   <Phone className="h-3.5 w-3.5 text-emerald-400" />
                   Calls
                 </div>
-                <p className="mt-1 font-mono text-lg font-bold tabular-nums">{totalCalls}</p>
+                <p className="mt-1 font-mono text-base sm:text-lg font-bold tabular-nums">{totalCalls}</p>
               </div>
               <div>
-                <div className="flex items-center justify-center gap-1 text-xs text-slate-300">
+                <div className="flex items-center justify-center gap-1 text-[11px] sm:text-xs text-slate-300">
                   <MessageSquare className="h-3.5 w-3.5 text-emerald-400" />
                   Chats
                 </div>
-                <p className="mt-1 font-mono text-lg font-bold tabular-nums">{totalChats}</p>
+                <p className="mt-1 font-mono text-base sm:text-lg font-bold tabular-nums">{totalChats}</p>
               </div>
             </div>
           </div>

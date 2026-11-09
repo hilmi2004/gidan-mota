@@ -59,7 +59,7 @@ export function AuctionsHubPage() {
   const items = data?.items ?? [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-600 mb-1">
@@ -75,14 +75,14 @@ export function AuctionsHubPage() {
           </p>
         </div>
 
-        <Link to="/wallet">
-          <Button variant="primary" leftIcon={<Wallet className="w-4 h-4" />}>
+        <Link to="/wallet" className="w-full sm:w-auto">
+          <Button variant="primary" fullWidth className="sm:w-auto" leftIcon={<Wallet className="w-4 h-4" />}>
             Refundable Bidding Deposit Wallet
           </Button>
         </Link>
       </div>
 
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="overflow-x-auto max-w-full pb-1">
         <Tabs
           tabs={[
             { id: 'live', label: 'Live Auctions' },

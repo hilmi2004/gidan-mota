@@ -270,12 +270,12 @@ export const CreateListingWizardPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
-            { num: 1, title: '1. Vehicle' },
-            { num: 2, title: '2. Specs & Area' },
-            { num: 3, title: '3. Guided Photos' },
-            { num: 4, title: '4. Price & Preview' },
+            { num: 1, title: '1. Vehicle', subtitle: 'Identity' },
+            { num: 2, title: '2. Specs', subtitle: 'Specs & Location' },
+            { num: 3, title: '3. Photos', subtitle: 'Guided Shots' },
+            { num: 4, title: '4. Price', subtitle: 'Price & Preview' },
           ].map((s) => (
             <button
               key={s.num}
@@ -283,13 +283,14 @@ export const CreateListingWizardPage: React.FC = () => {
               onClick={() => setStep(s.num as 1 | 2 | 3 | 4)}
               className={`p-2.5 rounded-control text-left border transition-colors ${
                 step === s.num
-                  ? 'bg-brand-600 text-white border-brand-600'
+                  ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
                   : step > s.num
                     ? 'bg-emerald-500/10 text-brand-700 dark:text-brand-500 border-brand-500/30'
                     : 'bg-surface text-ink-muted border-line'
               }`}
             >
               <span className="text-xs font-semibold block truncate">{s.title}</span>
+              <span className="hidden sm:block text-[10px] text-ink-muted mt-0.5 truncate">{s.subtitle}</span>
             </button>
           ))}
         </div>

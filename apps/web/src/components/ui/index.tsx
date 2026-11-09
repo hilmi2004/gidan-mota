@@ -106,7 +106,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             <span className="text-brand-600 dark:text-brand-500">Mota</span>
           </div>
           {showTagline && (
-            <span className="text-[10px] font-semibold text-ink-muted tracking-[0.12em] uppercase mt-1 whitespace-nowrap">
+            <span className="hidden sm:block text-[10px] font-semibold text-ink-muted tracking-[0.12em] uppercase mt-1 whitespace-nowrap">
               House of Verified Cars
             </span>
           )}

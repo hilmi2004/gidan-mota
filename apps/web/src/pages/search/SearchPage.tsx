@@ -135,7 +135,7 @@ export const SearchPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
       {/* Top Sticky Search & Filter Bar */}
       <Card padding="md" className="space-y-4">
         <form
@@ -143,9 +143,9 @@ export const SearchPage: React.FC = () => {
             e.preventDefault();
             void syncUrlAndFetch();
           }}
-          className="flex flex-col md:flex-row items-stretch md:items-end gap-3"
+          className="space-y-3"
         >
-          <div className="flex-1">
+          <div>
             <Input
               label="Search Make, Model, Nickname or Location"
               value={q}
@@ -155,8 +155,8 @@ export const SearchPage: React.FC = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-end gap-2.5">
-            <div className="w-full md:w-44">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 items-end">
+            <div>
               <Select
                 label="Make"
                 value={make}
@@ -171,7 +171,7 @@ export const SearchPage: React.FC = () => {
               />
             </div>
 
-            <div className="w-full md:w-44">
+            <div>
               <Select
                 label="State"
                 value={stateName}
@@ -183,7 +183,7 @@ export const SearchPage: React.FC = () => {
               />
             </div>
 
-            <div className="w-full md:w-44">
+            <div>
               <Select
                 label="Sort By"
                 value={sort}
@@ -199,24 +199,25 @@ export const SearchPage: React.FC = () => {
               />
             </div>
 
-            <Button type="submit" variant="primary">
-              Search
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              leftIcon={<SlidersHorizontal className="w-4 h-4" />}
-              onClick={() => setMobileFilterOpen(true)}
-            >
-              More Filters
-            </Button>
+            <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-2">
+              <Button type="submit" variant="primary" className="flex-1">
+                Search
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                leftIcon={<SlidersHorizontal className="w-4 h-4" />}
+                onClick={() => setMobileFilterOpen(true)}
+              >
+                More Filters
+              </Button>
+            </div>
           </div>
         </form>
 
         {/* Quick Trust & Condition Chips */}
         <div className="pt-3 border-t border-line flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <Chip
               label="Live Auctions Only"
               active={auctionOnly}
@@ -252,7 +253,7 @@ export const SearchPage: React.FC = () => {
           <button
             type="button"
             onClick={handleResetFilters}
-            className="text-xs font-medium text-ink-secondary hover:text-ink inline-flex items-center gap-1"
+            className="text-xs font-medium text-ink-secondary hover:text-ink inline-flex items-center gap-1 py-1"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset all</span>
@@ -261,12 +262,12 @@ export const SearchPage: React.FC = () => {
       </Card>
 
       {/* Results Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <p className="text-sm font-medium text-ink-secondary">
           Showing <strong className="text-ink tabular-nums">{totalCount}</strong> verified vehicles
         </p>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"

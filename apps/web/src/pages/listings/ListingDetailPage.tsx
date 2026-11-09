@@ -357,10 +357,10 @@ export const ListingDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 pb-28 md:pb-12 space-y-10">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 pb-28 md:pb-12 space-y-6 sm:space-y-10">
       {/* Breadcrumb & Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-ink-secondary">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-ink-secondary">
+        <div className="flex items-center gap-2 flex-wrap">
           <Link to="/search" className="hover:text-ink font-medium">
             All Nigeria
           </Link>
@@ -376,7 +376,7 @@ export const ListingDetailPage: React.FC = () => {
           <span className="text-ink font-semibold truncate max-w-[200px]">{listing.title}</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           <Button
             variant="outline"
             size="sm"
@@ -479,7 +479,7 @@ export const ListingDetailPage: React.FC = () => {
           {/* Vehicle Specification Grid */}
           <Card className="space-y-4">
             <h2 className="text-lg font-semibold text-ink">Vehicle Specifications & History</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 text-xs">
               {[
                 {
                   label: 'Condition',
@@ -519,9 +519,9 @@ export const ListingDetailPage: React.FC = () => {
                   value: listing.swapAccepted ? 'Swap Accepted' : 'Cash / Transfer Only',
                 },
               ].map((spec) => (
-                <div key={spec.label} className="p-3 rounded-control bg-elevated border border-line">
+                <div key={spec.label} className="p-3 rounded-control bg-elevated border border-line min-w-0">
                   <span className="text-ink-muted block">{spec.label}</span>
-                  <span className="font-semibold text-ink tabular-nums mt-0.5 block">
+                  <span className="font-semibold text-ink tabular-nums mt-0.5 block truncate" title={spec.value}>
                     {spec.value}
                   </span>
                 </div>
@@ -694,7 +694,7 @@ export const ListingDetailPage: React.FC = () => {
         {/* RIGHT COLUMN: Sticky Pricing, Live Auction Panel & Seller Contact Card */}
         <div className="space-y-5 lg:sticky lg:top-20">
           {listing.isAuction && auction ? (
-            <Card padding="lg" className="space-y-4 ring-1 ring-brand-500/40">
+            <Card id="auction-bidding-card" padding="lg" className="space-y-4 ring-1 ring-brand-500/40">
               <div className="flex items-center justify-between gap-2">
                 <Badge variant={auction.status === 'live' ? 'live' : 'neutral'}>
                   {auction.status === 'live' ? 'LIVE AUCTION' : auction.status.toUpperCase()}
@@ -1008,6 +1008,68 @@ export const ListingDetailPage: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Mobile Sticky Contact & Bidding Action Bar */}
+      <div className="lg:hidden fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] inset-x-0 z-30 bg-surface/95 backdrop-blur-md border-t border-line px-3.5 py-2.5 shadow-lg flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <span className="text-[10px] text-ink-muted block uppercase tracking-wider font-semibold">
+            {listing.isAuction ? 'Current High Bid' : 'Asking Price'}
+          </span>
+          <p className="font-bold text-ink text-sm sm:text-base font-mono tabular-nums truncate">
+            {listing.isAuction && auction
+              ? formatKobo(auction.currentPriceKobo)
+              : formatKobo(listing.priceKobo)}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          {listing.isAuction ? (
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Gavel className="w-3.5 h-3.5" />}
+              onClick={() => {
+                document.getElementById('auction-bidding-card')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Place Bid
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="px-2.5 min-w-[38px]"
+                onClick={handleRevealPhone}
+                aria-label="Call seller"
+                title="Call seller"
+              >
+                <Phone className="w-4 h-4 text-brand-600" />
+              </Button>
+              <a
+                href={`https://wa.me/2348031000001?text=${whatsappText}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="WhatsApp seller"
+                title="WhatsApp seller"
+              >
+                <Button variant="secondary" size="sm" className="px-2.5 min-w-[38px]">
+                  <MessageCircle className="w-4 h-4 text-brand-600" />
+                </Button>
+              </a>
+              <Button
+                variant="primary"
+                size="sm"
+                loading={startingChat}
+                leftIcon={<MessageSquare className="w-3.5 h-3.5" />}
+                onClick={handleStartChat}
+              >
+                Chat Seller
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

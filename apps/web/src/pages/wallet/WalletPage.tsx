@@ -160,7 +160,7 @@ export function WalletPage() {
   const transactions = data?.transactions ?? [];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-5xl mx-auto px-3 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-600 mb-1">
@@ -175,8 +175,8 @@ export function WalletPage() {
             power (50x multiplier). Non-winning deposits unlock automatically when an auction ends.
           </p>
         </div>
-        <Link to="/auctions">
-          <Button variant="outline" leftIcon={<Gavel className="w-4 h-4" />}>
+        <Link to="/auctions" className="w-full sm:w-auto">
+          <Button variant="outline" fullWidth className="sm:w-auto" leftIcon={<Gavel className="w-4 h-4" />}>
             Browse Live Auctions
           </Button>
         </Link>
@@ -226,25 +226,26 @@ export function WalletPage() {
 
       {/* Top-Up & Withdraw Controls */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="p-6 lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-ink">Add Refundable Bidding Deposit</h2>
+        <Card className="p-4 sm:p-6 lg:col-span-2 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h2 className="text-base sm:text-lg font-semibold text-ink">Add Refundable Bidding Deposit</h2>
             <Badge variant="id_verified">Paystack Instant Checkout</Badge>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[100_000, 200_000, 300_000, 500_000].map((presetNaira) => (
               <button
                 key={presetNaira}
                 type="button"
                 onClick={() => setDepositNaira(String(presetNaira))}
-                className={`px-3.5 py-2 rounded-control text-xs font-semibold font-mono tabular-nums border transition ${
+                className={`p-2.5 rounded-control text-xs font-semibold font-mono tabular-nums border text-center transition ${
                   Number(depositNaira) === presetNaira
-                    ? 'bg-brand-600 text-white border-brand-600'
-                    : 'border-line hover:border-brand-500 text-ink'
+                    ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
+                    : 'border-line hover:border-brand-500 text-ink bg-surface'
                 }`}
               >
-                ₦{presetNaira.toLocaleString()} (Unlocks ₦{(presetNaira * 50).toLocaleString()})
+                <span className="block text-sm font-bold">₦{presetNaira.toLocaleString()}</span>
+                <span className="block text-[10px] opacity-80 font-normal mt-0.5">50x: ₦{(presetNaira * 50).toLocaleString()}</span>
               </button>
             ))}
           </div>

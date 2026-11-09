@@ -67,29 +67,29 @@ export const AppShell: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-canvas text-ink pb-20 md:pb-0">
+    <div className="min-h-screen flex flex-col bg-canvas text-ink pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Slim Top Utility & Trust Bar */}
       <div className="bg-surface border-b border-line text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-8 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-ink-secondary truncate">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-8 flex items-center justify-between gap-2 sm:gap-4 text-[11px] sm:text-xs">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-ink-secondary truncate min-w-0">
             <ShieldCheck className="w-3.5 h-3.5 text-brand-600 shrink-0" />
             <span className="truncate">
-              17-digit VIN verified &amp; customs papers reviewed. Never pay before inspecting the vehicle.
+              17-digit VIN verified &amp; customs papers. <span className="hidden sm:inline">Never pay before inspecting the vehicle.</span>
             </span>
           </div>
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={toggleDataSaver}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-colors border whitespace-nowrap ${
+              className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-medium transition-colors border whitespace-nowrap ${
                 dataSaver
                   ? 'bg-brand-600/15 text-brand-600 border-brand-500/30'
                   : 'bg-elevated text-ink-secondary border-line hover:text-ink'
               }`}
               title="Reduces image payload size for 3G/4G networks"
             >
-              <Zap className="w-3 h-3" />
-              <span>Data Saver: {dataSaver ? 'ON' : 'OFF'}</span>
+              <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+              <span>Data Saver: <span className="font-bold">{dataSaver ? 'ON' : 'OFF'}</span></span>
             </button>
           </div>
         </div>
@@ -97,9 +97,9 @@ export const AppShell: React.FC = () => {
 
       {/* Main Sticky Header */}
       <header className="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-line">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-6">
           {/* Left: Brand Logo + 4 Primary Marketplace Links */}
-          <div className="flex items-center gap-6 lg:gap-8 min-w-0">
+          <div className="flex items-center gap-4 lg:gap-8 min-w-0">
             <Link to="/" className="shrink-0 group" aria-label={BRAND_CONFIG.name}>
               <BrandLogo size="md" showText showTagline />
             </Link>
@@ -136,10 +136,10 @@ export const AppShell: React.FC = () => {
           </div>
 
           {/* Right: Action Icons + Sell Car CTA + Account/Tools Dropdown */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <Link
               to="/sell"
-              className="hidden sm:inline-flex items-center gap-1.5 h-10 px-3.5 rounded-control bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 sm:h-10 px-3 sm:px-3.5 rounded-control bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors whitespace-nowrap"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Sell a Car</span>
@@ -149,7 +149,7 @@ export const AppShell: React.FC = () => {
               to="/chat"
               title="Messages & Offers"
               aria-label="Messages & Offers"
-              className={`w-10 h-10 inline-flex items-center justify-center rounded-control border transition-colors ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 inline-flex items-center justify-center rounded-control border transition-colors ${
                 location.pathname.startsWith('/chat')
                   ? 'border-brand-500 bg-brand-600/10 text-brand-600'
                   : 'border-line bg-surface hover:bg-elevated text-ink-secondary hover:text-ink'
@@ -162,7 +162,7 @@ export const AppShell: React.FC = () => {
               to="/notifications"
               title="Notifications & Bid Alerts"
               aria-label="Notifications & Bid Alerts"
-              className={`w-10 h-10 inline-flex items-center justify-center rounded-control border transition-colors ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 inline-flex items-center justify-center rounded-control border transition-colors ${
                 location.pathname.startsWith('/notifications')
                   ? 'border-brand-500 bg-brand-600/10 text-brand-600'
                   : 'border-line bg-surface hover:bg-elevated text-ink-secondary hover:text-ink'
@@ -176,7 +176,7 @@ export const AppShell: React.FC = () => {
               onClick={toggleTheme}
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              className="w-10 h-10 inline-flex items-center justify-center rounded-control border border-line bg-surface hover:bg-elevated text-ink-secondary hover:text-ink transition-colors"
+              className="w-9 h-9 sm:w-10 sm:h-10 inline-flex items-center justify-center rounded-control border border-line bg-surface hover:bg-elevated text-ink-secondary hover:text-ink transition-colors"
             >
               {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
@@ -187,7 +187,7 @@ export const AppShell: React.FC = () => {
                 type="button"
                 onClick={() => setMenuOpen((prev) => !prev)}
                 aria-expanded={menuOpen}
-                className="h-10 pl-2 pr-3 rounded-full border border-line bg-surface hover:bg-elevated inline-flex items-center gap-2 transition-colors"
+                className="h-9 sm:h-10 pl-1.5 sm:pl-2 pr-2.5 sm:pr-3 rounded-full border border-line bg-surface hover:bg-elevated inline-flex items-center gap-1.5 sm:gap-2 transition-colors"
               >
                 {user ? (
                   <>
@@ -203,8 +203,8 @@ export const AppShell: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <div className="w-7 h-7 rounded-full bg-elevated text-ink-secondary flex items-center justify-center">
-                      <User className="w-4 h-4" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-elevated text-ink-secondary flex items-center justify-center">
+                      <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
                     <span className="text-xs font-semibold text-ink whitespace-nowrap">
                       Menu
@@ -219,7 +219,7 @@ export const AppShell: React.FC = () => {
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 mt-2 w-72 rounded-card bg-surface border border-line shadow-cardHover py-2 z-50">
+                <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-72 rounded-card bg-surface border border-line shadow-cardHover py-2 z-50">
                   {user ? (
                     <div className="px-4 py-2.5 border-b border-line">
                       <p className="text-xs font-bold text-ink truncate">{user.displayName}</p>
@@ -381,14 +381,14 @@ export const AppShell: React.FC = () => {
       {/* Mobile Bottom Navigation Bar */}
       <nav
         aria-label="Mobile bottom navigation"
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-surface/95 backdrop-blur-md border-t border-line px-2 py-1 flex items-center justify-around"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-surface/95 backdrop-blur-md border-t border-line px-2 pt-1 pb-[calc(0.35rem+env(safe-area-inset-bottom))] flex items-center justify-around shadow-lg"
       >
         <NavLink
           to="/"
           end
           className={({ isActive }) =>
-            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium ${
-              isActive ? 'text-brand-600' : 'text-ink-secondary'
+            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium transition-colors ${
+              isActive ? 'text-brand-600 font-semibold' : 'text-ink-secondary hover:text-ink'
             }`
           }
         >
@@ -399,8 +399,8 @@ export const AppShell: React.FC = () => {
         <NavLink
           to="/search"
           className={({ isActive }) =>
-            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium ${
-              isActive ? 'text-brand-600' : 'text-ink-secondary'
+            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium transition-colors ${
+              isActive ? 'text-brand-600 font-semibold' : 'text-ink-secondary hover:text-ink'
             }`
           }
         >
@@ -410,10 +410,11 @@ export const AppShell: React.FC = () => {
 
         <NavLink
           to="/sell"
-          className="min-w-[64px] min-h-[44px] -mt-4 flex flex-col items-center justify-center"
+          className="min-w-[64px] min-h-[44px] -mt-5 flex flex-col items-center justify-center group"
+          aria-label="Sell your car"
         >
-          <div className="w-11 h-11 rounded-full bg-brand-600 text-white shadow-md flex items-center justify-center">
-            <PlusCircle className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-full bg-brand-600 group-hover:bg-brand-700 text-white shadow-lg flex items-center justify-center transition-transform active:scale-95">
+            <PlusCircle className="w-6 h-6" />
           </div>
           <span className="text-[11px] font-semibold text-ink mt-0.5">Sell</span>
         </NavLink>
@@ -421,8 +422,8 @@ export const AppShell: React.FC = () => {
         <NavLink
           to="/auctions"
           className={({ isActive }) =>
-            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium ${
-              isActive ? 'text-brand-600' : 'text-ink-secondary'
+            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium transition-colors ${
+              isActive ? 'text-brand-600 font-semibold' : 'text-ink-secondary hover:text-ink'
             }`
           }
         >
@@ -433,8 +434,8 @@ export const AppShell: React.FC = () => {
         <NavLink
           to={user ? '/profile' : '/auth'}
           className={({ isActive }) =>
-            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium ${
-              isActive ? 'text-brand-600' : 'text-ink-secondary'
+            `min-w-[56px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-control text-[11px] font-medium transition-colors ${
+              isActive ? 'text-brand-600 font-semibold' : 'text-ink-secondary hover:text-ink'
             }`
           }
         >

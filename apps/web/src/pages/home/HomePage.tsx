@@ -62,29 +62,31 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-14">
+    <div className="space-y-10 sm:space-y-14">
       {/* HERO SECTION WITH PRODUCT SEARCH MODULE */}
-      <section className="bg-surface border-b border-line py-10 md:py-14">
-        <div className="max-w-7xl mx-auto px-4 space-y-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center gap-2">
+      <section className="bg-surface border-b border-line py-8 sm:py-10 md:py-14">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 space-y-6 sm:space-y-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
+            <div className="max-w-3xl space-y-3 sm:space-y-4">
+              <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <Badge variant="vin_checked">17-Digit VIN Checked</Badge>
                 <Badge variant="customs_reviewed">Customs Duty Verified</Badge>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-ink tracking-tight leading-[1.12]">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-ink tracking-tight leading-[1.15]">
                 Buy verified cars in Nigeria. Or bid live with zero ghosting.
               </h1>
-              <p className="text-base text-ink-secondary max-w-2xl leading-relaxed">
+              <p className="text-sm sm:text-base text-ink-secondary max-w-2xl leading-relaxed">
                 Direct seller chat and WhatsApp for everyday classifieds, plus timed proxy-bid
                 auctions backed by refundable bidding deposits.
               </p>
             </div>
 
-            <Link to="/sell" className="shrink-0">
+            <Link to="/sell" className="w-full sm:w-auto shrink-0">
               <Button
                 variant="outline"
                 size="lg"
+                fullWidth
+                className="sm:w-auto"
                 leftIcon={<PlusCircle className="w-4 h-4 text-brand-600" />}
               >
                 Post Your Car (4 Steps)
@@ -94,7 +96,7 @@ export const HomePage: React.FC = () => {
 
           {/* Search Module Card */}
           <Card padding="md" className="shadow-cardHover border-brand-500/30">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 items-end">
               <Select
                 label="Make"
                 value={selectedMake}
@@ -139,8 +141,8 @@ export const HomePage: React.FC = () => {
               </Button>
             </div>
 
-            <div className="mt-4 pt-3.5 border-t border-line flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium text-ink-muted mr-1">Popular Searches:</span>
+            <div className="mt-4 pt-3.5 border-t border-line flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="text-xs font-medium text-ink-muted mr-1">Popular:</span>
               {[
                 { label: 'Foreign Used (Tokunbo)', url: '/search?condition=foreign_used' },
                 { label: 'Nigerian Used', url: '/search?condition=nigerian_used' },
@@ -161,7 +163,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* LIVE AUCTIONS ENDING SOON */}
-      <section className="max-w-7xl mx-auto px-4 space-y-5">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 space-y-4 sm:space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
             <div className="inline-flex items-center gap-2">
@@ -197,9 +199,9 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* BROWSE BY BODY TYPE */}
-      <section className="max-w-7xl mx-auto px-4 space-y-4">
-        <h2 className="text-xl font-bold text-ink">Browse by Category & Body Style</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 space-y-4">
+        <h2 className="text-lg sm:text-xl font-bold text-ink">Browse by Category &amp; Body Style</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 sm:gap-3">
           {[
             { name: 'Sedans & Saloons', query: 'bodyType=sedan', icon: Car },
             { name: 'SUVs & Crossovers', query: 'bodyType=suv', icon: Car },
@@ -215,14 +217,14 @@ export const HomePage: React.FC = () => {
                 interactive
                 padding="sm"
                 onClick={() => navigate(`/search?${cat.query}`)}
-                className="flex flex-col gap-2"
+                className="flex flex-col gap-2 p-3 sm:p-3.5"
               >
-                <div className="w-9 h-9 rounded-control bg-elevated text-brand-600 flex items-center justify-center">
-                  <Icon className="w-5 h-5" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-control bg-elevated text-brand-600 flex items-center justify-center">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-ink">{cat.name}</p>
-                  <p className="text-[11px] text-ink-muted">Explore inventory →</p>
+                  <p className="text-xs font-semibold text-ink leading-tight">{cat.name}</p>
+                  <p className="text-[10px] sm:text-[11px] text-ink-muted mt-0.5">Explore inventory →</p>
                 </div>
               </Card>
             );
@@ -231,7 +233,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* FEATURED CLASSIFIED LISTINGS */}
-      <section className="max-w-7xl mx-auto px-4 space-y-5">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 space-y-4 sm:space-y-5">
         <div className="flex items-end justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold text-ink">Verified Classifieds (Direct Contact)</h2>
@@ -265,16 +267,16 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* TRUST & HOW AUCTIONS WORK SECTION */}
-      <section className="max-w-7xl mx-auto px-4">
-        <Card padding="lg" className="bg-surface border-line space-y-6">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6">
+        <Card padding="md" className="bg-surface border-line space-y-5 sm:space-y-6 p-4 sm:p-6 md:p-8">
           <div className="max-w-2xl">
             <Badge variant="id_verified">Built for Nigerian Market Realities</Badge>
-            <h2 className="text-2xl font-bold text-ink mt-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-ink mt-2">
               How {BRAND_CONFIG.name} stops fake papers, cloned VINs, and time-wasters
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             <div className="space-y-2">
               <div className="w-10 h-10 rounded-control bg-brand-600/10 text-brand-600 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5" />
