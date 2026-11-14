@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.build]
+cmds = [
+  "pnpm --filter @autodey/shared build",
+  "pnpm --filter @autodey/api build"
+]
+
+[start]
+cmd = "pnpm --filter @autodey/api start"

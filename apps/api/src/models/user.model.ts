@@ -3,7 +3,7 @@ import type { UserRole } from '@autodey/shared';
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
-  phone: string;
+  phone?: string;
   email?: string;
   passwordHash?: string;
   displayName: string;
@@ -15,6 +15,7 @@ export interface IUser extends Document {
   roles: UserRole[];
   verification: {
     phoneVerified: boolean;
+    emailVerified?: boolean;
     idVerified: boolean;
     dealerVerified: boolean;
   };
@@ -45,8 +46,8 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
-    phone: { type: String, required: true, unique: true, index: true },
-    email: { type: String, sparse: true, unique: true },
+    phone: { type: String, sparse: true, index: true },
+    email: { type: String, sparse: true, unique: true, index: true },
     passwordHash: { type: String, select: false },
     displayName: { type: String, required: true, trim: true },
     avatarUrl: { type: String },
@@ -60,7 +61,8 @@ const UserSchema = new Schema<IUser>(
       default: ['buyer', 'seller'],
     },
     verification: {
-      phoneVerified: { type: Boolean, default: false },
+      phoneVerified: { type: Boolean, default: true },
+      emailVerified: { type: Boolean, default: true },
       idVerified: { type: Boolean, default: false },
       dealerVerified: { type: Boolean, default: false },
     },

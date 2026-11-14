@@ -101,7 +101,7 @@ walletRouter.post(
       .toUpperCase()}`;
 
     const initResult = await paymentAdapter.initializeTransaction({
-      email: user.email || `${user.phone.replace('+', '')}@autodey.ng`,
+      email: user.email || `${(user.phone || user._id.toString()).replace('+', '')}@autodey.ng`,
       amountKobo: parsed.amountKobo,
       reference,
       metadata: {

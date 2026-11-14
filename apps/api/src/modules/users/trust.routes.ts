@@ -72,7 +72,7 @@ trustRouter.post(
         throw AppError.notFound('SELLER_NOT_FOUND', 'Seller not found.');
       }
 
-      const cleanDigits = (seller.whatsappNumber || seller.phone).replace(/\D/g, '');
+      const cleanDigits = (seller.whatsappNumber || seller.phone || '').replace(/\D/g, '');
       const waText = encodeURIComponent(
         `Hello ${seller.displayName}, I am interested in your ${listing.title} (${formatKobo(
           listing.priceKobo,
@@ -80,7 +80,7 @@ trustRouter.post(
       );
 
       res.status(200).json({
-        phone: seller.phone,
+        phone: seller.phone || '',
         whatsappUrl: `https://wa.me/${cleanDigits}?text=${waText}`,
         phoneRevealsCount: listing.stats.phoneReveals,
         safetyReminder:

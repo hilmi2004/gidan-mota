@@ -26,8 +26,25 @@ export const VerifyOtpSchema = z.object({
   deviceFingerprint: z.string().max(128).optional(),
 });
 
+export const EmailSignupSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters').max(72),
+  displayName: z.string().min(2, 'Name must be at least 2 characters').max(60),
+  phone: z.string().optional().or(z.literal('')),
+  deviceFingerprint: z.string().max(128).optional(),
+});
+export type EmailSignupInput = z.infer<typeof EmailSignupSchema>;
+
+export const EmailLoginSchema = z.object({
+  email: z.string().min(3, 'Email or phone number is required'),
+  password: z.string().min(1, 'Password is required'),
+  deviceFingerprint: z.string().max(128).optional(),
+});
+export type EmailLoginInput = z.infer<typeof EmailLoginSchema>;
+
 export const PasswordLoginSchema = z.object({
-  phone: NigerianPhoneSchema,
+  phone: z.string().optional(),
+  email: z.string().optional(),
   password: z.string().min(1, 'Password is required'),
   deviceFingerprint: z.string().max(128).optional(),
 });

@@ -48,8 +48,8 @@ usersRouter.get('/me', requireAuth, async (req: Request, res: Response, next: Ne
     res.status(200).json({
       user: {
         id: user._id.toString(),
-        phone: user.phone,
-        phoneMasked: maskPhone(user.phone),
+        phone: user.phone || '',
+        phoneMasked: user.phone ? maskPhone(user.phone) : '—',
         email: user.email,
         displayName: user.displayName,
         avatarUrl: user.avatarUrl,
@@ -354,7 +354,7 @@ usersRouter.get('/:id/profile', async (req: Request, res: Response, next: NextFu
       profile: {
         id: user._id.toString(),
         displayName: user.displayName,
-        phoneMasked: maskPhone(user.phone),
+        phoneMasked: user.phone ? maskPhone(user.phone) : '—',
         avatarUrl: user.avatarUrl,
         bio: user.bio,
         state: user.state,

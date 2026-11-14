@@ -2,6 +2,7 @@ import type { UserRole } from '../schemas/index.js';
 
 export interface UserVerificationBadges {
   phoneVerified: boolean;
+  emailVerified?: boolean;
   idVerified: boolean;
   dealerVerified: boolean;
 }

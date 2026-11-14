@@ -52,7 +52,7 @@ export async function dispatchNotification(params: {
   }
 
   // 3. Critical SMS only (outbid, auction won, settlement reminder)
-  if (CRITICAL_SMS_TYPES.has(params.type) && user.notificationPrefs?.sms !== false) {
+  if (user.phone && CRITICAL_SMS_TYPES.has(params.type) && user.notificationPrefs?.sms !== false) {
     await smsAdapter.sendTransactional(user.phone, `${BRAND_CONFIG.name}: ${params.title} - ${params.body}`);
   }
 }

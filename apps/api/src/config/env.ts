@@ -11,13 +11,23 @@ const EnvSchema = z.object({
   PORT: z.coerce.number().int().default(4000),
   WEB_URL: z.string().default('http://localhost:5173'),
   API_URL: z.string().default('http://localhost:4000'),
-  MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/autodey'),
-  REDIS_URL: z.string().default('redis://127.0.0.1:6379'),
+  MONGODB_URI: z.string().default(process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/autodey'),
+  REDIS_URL: z.string().default(process.env.REDISURL || process.env.REDIS_URL || 'redis://127.0.0.1:6379'),
   USE_LOCAL_EMBEDDED_INFRA: z
     .string()
     .optional()
-    .default('true')
-    .transform((v) => v === 'true' || v === '1'),
+    .transform((v) => {
+      if (v !== undefined) return v === 'true' || v === '1';
+      if (
+        process.env.NODE_ENV === 'production' ||
+        process.env.RAILWAY_ENVIRONMENT ||
+        (process.env.MONGODB_URI && !process.env.MONGODB_URI.includes('127.0.0.1')) ||
+        Boolean(process.env.MONGO_URL)
+      ) {
+        return false;
+      }
+      return true;
+    }),
   JWT_ACCESS_SECRET: z.string().min(16).default('autodey-dev-access-secret-key-2026-ng'),
   JWT_REFRESH_SECRET: z.string().min(16).default('autodey-dev-refresh-secret-key-2026-ng'),
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),

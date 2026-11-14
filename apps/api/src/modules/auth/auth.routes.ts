@@ -1,10 +1,14 @@
 import crypto from 'node:crypto';
 import { Router, type Request, type Response, type NextFunction } from 'express';
 import {
+  EmailLoginSchema,
+  EmailSignupSchema,
   PasswordLoginSchema,
   RequestOtpSchema,
   VerifyOtpSchema,
   maskPhone,
+  type EmailLoginInput,
+  type EmailSignupInput,
 } from '@autodey/shared';
 import { env } from '../../config/env.js';
 import { smsAdapter } from '../../adapters/index.js';
@@ -56,9 +60,9 @@ function setRefreshCookie(res: Response, rawToken: string): void {
 function serializeAuthUser(user: IUser) {
   return {
     id: user._id.toString(),
-    phone: user.phone,
-    phoneMasked: maskPhone(user.phone),
-    email: user.email,
+    phone: user.phone || '',
+    phoneMasked: user.phone ? maskPhone(user.phone) : '—',
+    email: user.email || '',
     displayName: user.displayName,
     avatarUrl: user.avatarUrl,
     bio: user.bio,
@@ -74,6 +78,145 @@ function serializeAuthUser(user: IUser) {
     createdAt: user.createdAt.toISOString(),
   };
 }
+
+/**
+ * EMAIL & PASSWORD SIGNUP (instant, zero SMS OTP required)
+ */
+authRouter.post(
+  '/signup',
+  rateLimit({ prefix: 'signup', maxRequests: 20, windowSeconds: 300 }),
+  validateBody(EmailSignupSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password, displayName, phone, deviceFingerprint } = req.body as EmailSignupInput;
+      const normalizedEmail = email.toLowerCase().trim();
+
+      const existingConditions: Array<{ email?: string; phone?: string }> = [{ email: normalizedEmail }];
+      if (phone && phone.trim()) {
+        existingConditions.push({ phone: phone.trim() });
+      }
+
+      const existingUser = await UserModel.findOne({
+        $or: existingConditions,
+        deletedAt: null,
+      });
+
+      if (existingUser) {
+        if (existingUser.email === normalizedEmail) {
+          throw AppError.conflict('EMAIL_EXISTS', 'An account with this email already exists. Please sign in.');
+        }
+        throw AppError.conflict('PHONE_EXISTS', 'An account with this phone number already exists.');
+      }
+
+      const user = await UserModel.create({
+        email: normalizedEmail,
+        displayName: displayName.trim(),
+        passwordHash: hashPassword(password),
+        phone: phone && phone.trim() ? phone.trim() : undefined,
+        roles: ['buyer', 'seller'],
+        verification: {
+          phoneVerified: true,
+          emailVerified: true,
+          idVerified: false,
+          dealerVerified: false,
+        },
+        ndpaConsentAt: new Date(),
+      });
+
+      // Initialize Wallet
+      await WalletAccountModel.findOneAndUpdate(
+        { userId: user._id },
+        { $setOnInsert: { userId: user._id, availableKobo: 0, heldKobo: 0, forfeitedKobo: 0, currency: 'NGN' } },
+        { upsert: true, new: true },
+      );
+
+      const fpHash = hashValue(deviceFingerprint || req.headers['user-agent'] || 'browser');
+      const rawRefresh = crypto.randomBytes(40).toString('hex');
+      const familyId = crypto.randomUUID();
+      await SessionModel.create({
+        userId: user._id,
+        tokenHash: hashValue(rawRefresh),
+        familyId,
+        deviceFingerprint: fpHash,
+        ip: req.ip,
+        userAgent: req.headers['user-agent'],
+        expiresAt: new Date(Date.now() + env.JWT_REFRESH_EXPIRES_DAYS * 24 * 60 * 60 * 1000),
+      });
+
+      setRefreshCookie(res, rawRefresh);
+      const accessToken = signAccessToken({
+        sub: user._id.toString(),
+        phone: user.phone || '',
+        roles: user.roles,
+      });
+
+      res.status(201).json({
+        accessToken,
+        refreshToken: rawRefresh,
+        isNewUser: true,
+        user: serializeAuthUser(user),
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+/**
+ * EMAIL & PASSWORD LOGIN (accepts email or phone number)
+ */
+authRouter.post(
+  '/login',
+  rateLimit({ prefix: 'login', maxRequests: 20, windowSeconds: 300 }),
+  validateBody(EmailLoginSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email: identifier, password, deviceFingerprint } = req.body as EmailLoginInput;
+      const cleanIdent = identifier.trim().toLowerCase();
+
+      const user = await UserModel.findOne({
+        $or: [{ email: cleanIdent }, { phone: identifier.trim() }],
+        deletedAt: null,
+      }).select('+passwordHash');
+
+      if (!user || !user.passwordHash || !verifyPassword(password, user.passwordHash)) {
+        throw AppError.unauthorized('INVALID_CREDENTIALS', 'Invalid email or password.');
+      }
+
+      if (user.bannedUntil && user.bannedUntil.getTime() > Date.now()) {
+        throw AppError.forbidden('ACCOUNT_SUSPENDED', user.banReason || 'Your account is suspended.');
+      }
+
+      const fpHash = hashValue(deviceFingerprint || req.headers['user-agent'] || 'browser');
+      const rawRefresh = crypto.randomBytes(40).toString('hex');
+      const familyId = crypto.randomUUID();
+      await SessionModel.create({
+        userId: user._id,
+        tokenHash: hashValue(rawRefresh),
+        familyId,
+        deviceFingerprint: fpHash,
+        ip: req.ip,
+        userAgent: req.headers['user-agent'],
+        expiresAt: new Date(Date.now() + env.JWT_REFRESH_EXPIRES_DAYS * 24 * 60 * 60 * 1000),
+      });
+
+      setRefreshCookie(res, rawRefresh);
+      const accessToken = signAccessToken({
+        sub: user._id.toString(),
+        phone: user.phone || '',
+        roles: user.roles,
+      });
+
+      res.status(200).json({
+        accessToken,
+        refreshToken: rawRefresh,
+        user: serializeAuthUser(user),
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 authRouter.post(
   '/otp/request',
@@ -223,7 +366,7 @@ authRouter.post(
       setRefreshCookie(res, rawRefresh);
       const accessToken = signAccessToken({
         sub: user._id.toString(),
-        phone: user.phone,
+        phone: user.phone || '',
         roles: user.roles,
       });
 
@@ -245,10 +388,18 @@ authRouter.post(
   validateBody(PasswordLoginSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { phone, password } = req.body as { phone: string; password: string };
-      const user = await UserModel.findOne({ phone, deletedAt: null }).select('+passwordHash');
+      const { phone, email, password } = req.body as { phone?: string; email?: string; password: string };
+      const ident = (email || phone || '').trim().toLowerCase();
+      const user = await UserModel.findOne({
+        $or: [
+          { email: ident },
+          { phone: ident },
+          ...(phone ? [{ phone: phone.trim() }] : []),
+        ],
+        deletedAt: null,
+      }).select('+passwordHash');
       if (!user || !user.passwordHash || !verifyPassword(password, user.passwordHash)) {
-        throw AppError.unauthorized('INVALID_CREDENTIALS', 'Wrong phone number or password.');
+        throw AppError.unauthorized('INVALID_CREDENTIALS', 'Wrong email, phone number, or password.');
       }
 
       const rawRefresh = crypto.randomBytes(40).toString('hex');
@@ -264,7 +415,7 @@ authRouter.post(
       setRefreshCookie(res, rawRefresh);
       const accessToken = signAccessToken({
         sub: user._id.toString(),
-        phone: user.phone,
+        phone: user.phone || '',
         roles: user.roles,
       });
 
@@ -324,7 +475,7 @@ authRouter.post('/refresh', async (req: Request, res: Response, next: NextFuncti
     setRefreshCookie(res, nextRawRefresh);
     const accessToken = signAccessToken({
       sub: user._id.toString(),
-      phone: user.phone,
+      phone: user.phone || '',
       roles: user.roles,
     });
 

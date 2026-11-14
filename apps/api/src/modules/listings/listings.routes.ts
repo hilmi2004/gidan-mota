@@ -664,7 +664,7 @@ listingsRouter.get(
           ? {
               id: seller._id.toString(),
               displayName: seller.displayName,
-              phoneMasked: maskPhone(seller.phone),
+              phoneMasked: seller.phone ? maskPhone(seller.phone) : '—',
               avatarUrl: seller.avatarUrl,
               bio: seller.bio,
               state: seller.state,

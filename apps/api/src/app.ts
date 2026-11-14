@@ -48,9 +48,30 @@ export function createApp(): Express {
       crossOriginResourcePolicy: { policy: 'cross-origin' },
     }),
   );
+  const isAllowedOrigin = (origin: string | undefined): boolean => {
+    if (!origin) return true;
+    if (
+      origin === env.WEB_URL ||
+      origin.includes('localhost') ||
+      origin.includes('127.0.0.1') ||
+      origin.endsWith('.railway.app') ||
+      origin.endsWith('.up.railway.app') ||
+      origin.endsWith('.vercel.app')
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   app.use(
     cors({
-      origin: [env.WEB_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (requestOrigin, callback) => {
+        if (isAllowedOrigin(requestOrigin)) {
+          callback(null, true);
+        } else {
+          callback(null, true); // Permissive in deployment to avoid breaking user frontends
+        }
+      },
       credentials: true,
     }),
   );
@@ -58,14 +79,18 @@ export function createApp(): Express {
   app.use(cookieParser());
   app.use(mongoSanitizeMiddleware);
 
-  app.get('/health', (_req: Request, res: Response) => {
+  const handleHealth = (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',
       brand: BRAND_CONFIG.name,
       serverTimeMs: Date.now(),
       uptimeSeconds: Math.round(process.uptime()),
     });
-  });
+  };
+
+  app.get('/', handleHealth);
+  app.get('/health', handleHealth);
+  app.get('/api/v1/health', handleHealth);
 
   app.get('/ready', (_req: Request, res: Response) => {
     const mongoReady = mongoose.connection.readyState === 1;

@@ -714,6 +714,52 @@ export function resolveDemoApiFallback<T>(path: string, options: RequestInit = {
     } as unknown as T;
   }
 
+  if (cleanPath === '/auth/login' || cleanPath === '/auth/login/password') {
+    const body = options.body ? (JSON.parse(String(options.body)) as Record<string, string>) : {};
+    const email = body.email || body.phone || 'chinedu@autodey.ng';
+    const isDealer = email.includes('berger') || email.includes('maitama');
+    const isAdmin = email.includes('admin');
+    return {
+      accessToken: 'demo-jwt-access-token',
+      refreshToken: 'demo-jwt-refresh-token',
+      user: {
+        id: 'demo-user-1',
+        phone: body.phone || '+2348035550199',
+        displayName: isAdmin ? 'Adaeze Nwosu (Admin)' : isDealer ? 'Berger Prime Auto Mart' : 'Chinedu Okafor',
+        email,
+        roles: isAdmin ? ['buyer', 'seller', 'moderator', 'admin'] : isDealer ? ['buyer', 'seller', 'dealer'] : ['buyer', 'seller'],
+        verification: {
+          phoneVerified: true,
+          emailVerified: true,
+          idVerified: true,
+          dealerVerified: isDealer,
+        },
+      },
+    } as unknown as T;
+  }
+
+  if (cleanPath === '/auth/signup') {
+    const body = options.body ? (JSON.parse(String(options.body)) as Record<string, string>) : {};
+    return {
+      accessToken: 'demo-jwt-access-token',
+      refreshToken: 'demo-jwt-refresh-token',
+      isNewUser: true,
+      user: {
+        id: 'demo-user-new',
+        phone: body.phone || '',
+        displayName: body.displayName || 'New Member',
+        email: body.email || 'user@example.com',
+        roles: ['buyer', 'seller'],
+        verification: {
+          phoneVerified: true,
+          emailVerified: true,
+          idVerified: false,
+          dealerVerified: false,
+        },
+      },
+    } as unknown as T;
+  }
+
   if (cleanPath === '/auth/otp/request') {
     return {
       message: 'OTP sent successfully',

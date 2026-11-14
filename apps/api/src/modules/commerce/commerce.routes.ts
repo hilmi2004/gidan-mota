@@ -95,7 +95,7 @@ commerceRouter.post(
       .toUpperCase()}`;
 
     const initPayment = await paymentAdapter.initializeTransaction({
-      email: user.email || `${user.phone.replace('+', '')}@autodey.ng`,
+      email: user.email || `${(user.phone || user._id.toString()).replace('+', '')}@autodey.ng`,
       amountKobo: tierConfig.priceKobo,
       reference,
       metadata: {
