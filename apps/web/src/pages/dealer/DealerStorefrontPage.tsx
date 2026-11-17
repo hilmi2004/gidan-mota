@@ -129,7 +129,7 @@ export function DealerStorefrontPage(): React.ReactElement {
       }),
     onSuccess: (res) => {
       setSubFeedback(
-        `Dealer subscription (${res.dealerProfile.planTier.toUpperCase()}) activated! Storefront slug: /dealer/${res.dealerProfile.slug}`,
+        `Dealer subscription (${(res.dealerProfile?.planTier || 'PRO').toUpperCase()}) activated! Storefront slug: /dealer/${res.dealerProfile?.slug}`,
       );
       void queryClient.invalidateQueries({ queryKey: ['dealers-directory'] });
       void queryClient.invalidateQueries({ queryKey: ['dealer-storefront'] });
@@ -177,7 +177,7 @@ export function DealerStorefrontPage(): React.ReactElement {
                   <div>
                     <div className="flex items-center justify-between">
                       <Badge variant={tier === 'premier' ? 'dealer_verified' : 'phone_verified'}>
-                        {info.label || tier.toUpperCase()}
+                        {info.label || (tier || 'PRO').toUpperCase()}
                       </Badge>
                       <span className="font-mono text-lg font-bold tabular-nums text-ink">
                         {formatKobo(priceKobo)}/mo
@@ -201,7 +201,7 @@ export function DealerStorefrontPage(): React.ReactElement {
                         setShowSubscribeModal(true);
                       }}
                     >
-                      Choose {info.label || tier.toUpperCase()}
+                      Choose {info.label || (tier || 'PRO').toUpperCase()}
                     </Button>
                   )}
                 </Card>

@@ -491,16 +491,16 @@ export const ListingDetailPage: React.FC = () => {
                         : 'Brand New',
                 },
                 { label: 'Mileage', value: `${listing.mileageKm.toLocaleString()} km` },
-                { label: 'Transmission', value: listing.transmission.toUpperCase() },
-                { label: 'Fuel Type', value: listing.fuelType.toUpperCase() },
-                { label: 'Body Style', value: listing.bodyType.toUpperCase() },
+                { label: 'Transmission', value: (listing?.transmission || 'AUTOMATIC').toUpperCase() },
+                { label: 'Fuel Type', value: (listing?.fuelType || 'PETROL').toUpperCase() },
+                { label: 'Body Style', value: (listing?.bodyType || 'SEDAN').toUpperCase() },
                 { label: 'Drive Side', value: listing.driveSide === 'lhd' ? 'Left-Hand Drive' : 'Right-Hand Drive' },
                 { label: 'Exterior Color', value: listing.exteriorColor },
                 { label: 'Interior', value: listing.interiorColor },
                 {
                   label: 'Customs Duty Papers',
                   value:
-                    listing.badges.customsReviewed
+                    listing.badges?.customsReviewed
                       ? 'Verified on File'
                       : listing.customsStatus === 'yes'
                         ? 'Declared Yes'
@@ -508,7 +508,7 @@ export const ListingDetailPage: React.FC = () => {
                 },
                 {
                   label: 'Accident History',
-                  value: listing.accidentHistory.replace(/_/g, ' ').toUpperCase(),
+                  value: (listing?.accidentHistory || 'NONE').replace(/_/g, ' ').toUpperCase(),
                 },
                 {
                   label: '17-Character VIN',
@@ -697,7 +697,7 @@ export const ListingDetailPage: React.FC = () => {
             <Card id="auction-bidding-card" padding="lg" className="space-y-4 ring-1 ring-brand-500/40">
               <div className="flex items-center justify-between gap-2">
                 <Badge variant={auction.status === 'live' ? 'live' : 'neutral'}>
-                  {auction.status === 'live' ? 'LIVE AUCTION' : auction.status.toUpperCase()}
+                  {auction.status === 'live' ? 'LIVE AUCTION' : (auction?.status || 'AUCTION').toUpperCase()}
                 </Badge>
                 <Badge variant={auction.reserveStatus} />
               </div>
@@ -977,7 +977,7 @@ export const ListingDetailPage: React.FC = () => {
       <Modal
         open={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        title={`${listing.title} — ${currentPhoto.angle.toUpperCase()}`}
+        title={`${listing.title} — ${(currentPhoto?.angle || 'Photo').toUpperCase()}`}
         description={`Photo ${activePhotoIdx + 1} of ${photos.length}`}
       >
         <div className="space-y-4">

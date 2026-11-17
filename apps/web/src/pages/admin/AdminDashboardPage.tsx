@@ -519,7 +519,7 @@ export function AdminDashboardPage(): React.ReactElement {
                                 : 'reserve_not_met'
                           }
                         >
-                          CAC: {status.toUpperCase()}
+                          CAC: {(status || 'PENDING').toUpperCase()}
                         </Badge>
                         <Badge variant="neutral">{(dealer.planTier || 'pro').toUpperCase()}</Badge>
                       </div>
@@ -766,7 +766,7 @@ export function AdminDashboardPage(): React.ReactElement {
                     <Badge
                       variant={dispute.status === 'resolved' ? 'phone_verified' : 'live'}
                     >
-                      {dispute.status.toUpperCase()}
+                      {(dispute?.status || 'PENDING').toUpperCase()}
                     </Badge>
                   </div>
                   <p className="mt-1 text-sm font-medium text-ink">{dispute.reason}</p>

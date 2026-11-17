@@ -182,8 +182,11 @@ export const ChatPage: React.FC = () => {
     void loadThread(activeConvId);
 
     const sock = io(`${API_BASE_URL}/chat`, {
-      transports: ['websocket', 'polling'],
+      transports: ['polling', 'websocket'],
       withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1500,
     });
     socketRef.current = sock;
     sock.emit('join_conversation', activeConvId);
@@ -521,7 +524,7 @@ export const ChatPage: React.FC = () => {
                         </span>
                         <span className="text-ink-secondary">
                           {new Date(inspectionProposal.scheduledAt).toLocaleString('en-NG')} •{' '}
-                          <strong>{inspectionProposal.status.toUpperCase()}</strong>
+                          <strong>{(inspectionProposal?.status || 'PENDING').toUpperCase()}</strong>
                         </span>
                       </div>
                     </div>

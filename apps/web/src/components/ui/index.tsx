@@ -684,12 +684,16 @@ export const Avatar: React.FC<AvatarProps> = ({ name, src, size = 'md', verified
     md: 'w-11 h-11 text-sm',
     lg: 'w-16 h-16 text-lg',
   };
-  const initials = name
-    .split(' ')
-    .map((p) => p[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  const safeName = typeof name === 'string' ? name.trim() : '';
+  const initials = safeName
+    ? safeName
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((p) => p[0] || '')
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'GM';
 
   return (
     <div className="relative inline-flex shrink-0">

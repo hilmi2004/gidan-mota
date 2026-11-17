@@ -237,7 +237,7 @@ export function ComparePage() {
                         {v.fairPrice.verdict === 'above_market' && (
                           <TrendingUp className="w-3.5 h-3.5" />
                         )}
-                        {v.fairPrice.verdict.replace(/_/g, ' ').toUpperCase()}
+                        {(v.fairPrice.verdict || 'FAIR').replace(/_/g, ' ').toUpperCase()}
                       </span>
                     ) : (
                       <span className="text-ink-muted">Unique Spec</span>

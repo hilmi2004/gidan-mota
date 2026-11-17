@@ -178,8 +178,11 @@ export function AuctionDetailPage() {
   useEffect(() => {
     if (!auction?._id) return;
     const socket = io(`${API_BASE_URL}/auctions`, {
-      transports: ['websocket', 'polling'],
+      transports: ['polling', 'websocket'],
       withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1500,
     });
 
     socket.on('connect', () => {
@@ -795,7 +798,7 @@ export function AuctionDetailPage() {
                     <span className="text-xs font-bold uppercase tracking-wider text-brand-700">
                       72-Hour Settlement Workspace
                     </span>
-                    <Badge variant="reserve_met">{settlement.status.toUpperCase()}</Badge>
+                    <Badge variant="reserve_met">{(settlement?.status || 'PENDING').toUpperCase()}</Badge>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 text-xs font-mono tabular-nums">

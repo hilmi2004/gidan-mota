@@ -212,7 +212,7 @@ export const AuctionCard: React.FC<{ item: ListingSummaryItem }> = ({ item }) =>
           {auction.status === 'live' ? (
             <Badge variant="live" />
           ) : (
-            <Badge variant="neutral">{auction.status.replace(/_/g, ' ').toUpperCase()}</Badge>
+            <Badge variant="neutral">{((auction?.status || 'AUCTION') as string).replace(/_/g, ' ').toUpperCase()}</Badge>
           )}
           <Badge variant={auction.reserveStatus} />
         </div>

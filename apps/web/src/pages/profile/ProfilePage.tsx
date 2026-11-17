@@ -389,7 +389,7 @@ export const ProfilePage: React.FC = () => {
                   <p className="text-xs font-semibold text-ink">Level 3: Verified Dealer</p>
                   <p className="text-[11px] text-ink-secondary">
                     {data.dealerProfile
-                      ? `CAC ${data.dealerProfile.cacNumber} (${data.dealerProfile.status.toUpperCase()})`
+                      ? `CAC ${data.dealerProfile.cacNumber} (${(data.dealerProfile.status || 'PENDING').toUpperCase()})`
                       : 'For Berger, Lekki, Abuja & PH car lots with CAC registration.'}
                   </p>
                 </div>
@@ -472,7 +472,7 @@ export const ProfilePage: React.FC = () => {
                           ({rec.documentType} via {rec.provider})
                         </span>
                       </div>
-                      <Badge variant="id_verified">{rec.status.toUpperCase()}</Badge>
+                      <Badge variant="id_verified">{(rec?.status || 'VERIFIED').toUpperCase()}</Badge>
                     </div>
                   ))}
                 </div>

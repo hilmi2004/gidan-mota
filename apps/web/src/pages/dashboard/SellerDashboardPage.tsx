@@ -261,7 +261,7 @@ export const SellerDashboardPage: React.FC = () => {
                               : 'neutral'
                         }
                       >
-                        {item.status.replace(/_/g, ' ').toUpperCase()}
+                        {((item?.status || 'ACTIVE') as string).replace(/_/g, ' ').toUpperCase()}
                       </Badge>
                     </div>
                     <PriceTag kobo={item.priceKobo} size="sm" negotiable={item.negotiable} />

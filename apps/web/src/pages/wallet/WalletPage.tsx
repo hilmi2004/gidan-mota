@@ -361,7 +361,7 @@ export function WalletPage() {
                     <div>
                       <div className="text-sm font-medium text-ink">{tx.description}</div>
                       <div className="text-xs text-ink-muted font-mono tabular-nums">
-                        {tx.type.toUpperCase()} · Ref: {tx.referenceId} ·{' '}
+                        {(tx?.type || 'TRANSACTION').toUpperCase()} · Ref: {tx?.referenceId || 'N/A'} ·{' '}
                         {new Date(tx.createdAt).toLocaleString()}
                       </div>
                     </div>

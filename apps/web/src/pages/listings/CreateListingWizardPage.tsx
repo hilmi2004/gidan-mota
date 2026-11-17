@@ -150,7 +150,7 @@ export const CreateListingWizardPage: React.FC = () => {
       ]);
       pushToast({
         type: 'success',
-        title: `${angle.toUpperCase()} Photo Compressed & Ready`,
+        title: `${(angle || 'Photo').toUpperCase()} Photo Compressed & Ready`,
         message: `Compressed to ${Math.round(compressed.compressedBytes / 1024)} KB WebP.`,
       });
     } catch {

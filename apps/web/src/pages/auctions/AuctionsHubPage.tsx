@@ -132,7 +132,7 @@ export function AuctionsHubPage() {
                     {auc.status === 'live' ? (
                       <Badge variant="live" />
                     ) : (
-                      <Badge variant="neutral">{auc.status.replace(/_/g, ' ').toUpperCase()}</Badge>
+                      <Badge variant="neutral">{((auc?.status || 'AUCTION') as string).replace(/_/g, ' ').toUpperCase()}</Badge>
                     )}
                     {!auc.hasReserve ? (
                       <Badge variant="no_reserve" />
