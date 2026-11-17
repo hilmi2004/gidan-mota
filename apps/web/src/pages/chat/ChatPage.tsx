@@ -27,6 +27,7 @@ import {
   useToast,
 } from '../../components/ui';
 import { apiRequest } from '../../lib/api';
+import { API_BASE_URL } from '../../lib/config';
 import { useAppStore } from '../../stores/useAppStore';
 
 interface ConversationListItem {
@@ -180,7 +181,10 @@ export const ChatPage: React.FC = () => {
     setSearchParams({ conversationId: activeConvId }, { replace: true });
     void loadThread(activeConvId);
 
-    const sock = io('/chat', { transports: ['websocket', 'polling'] });
+    const sock = io(`${API_BASE_URL}/chat`, {
+      transports: ['websocket', 'polling'],
+      withCredentials: true,
+    });
     socketRef.current = sock;
     sock.emit('join_conversation', activeConvId);
 

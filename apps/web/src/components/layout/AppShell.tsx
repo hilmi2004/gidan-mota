@@ -24,6 +24,7 @@ import {
 import { BRAND_CONFIG } from '@autodey/shared';
 import { useAppStore } from '../../stores/useAppStore';
 import { Avatar, BrandLogo, Button } from '../ui';
+import { API_BASE_URL } from '../../lib/config';
 
 export const AppShell: React.FC = () => {
   const { user, theme, dataSaver, toggleTheme, toggleDataSaver } = useAppStore();
@@ -359,12 +360,12 @@ export const AppShell: React.FC = () => {
                 </li>
                 <li>
                   <a
-                    href="http://localhost:4000/api/docs"
+                    href={`${API_BASE_URL}/docs`}
                     target="_blank"
                     rel="noreferrer"
                     className="hover:underline"
                   >
-                    /api/docs — OpenAPI Swagger UI
+                    /docs — OpenAPI Swagger UI
                   </a>
                 </li>
               </ul>

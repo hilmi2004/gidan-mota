@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { formatKobo, getBidIncrementKobo, koboToNaira, nairaToKobo } from '@autodey/shared';
 import { apiRequest } from '../../lib/api';
+import { API_BASE_URL } from '../../lib/config';
 import { useAppStore } from '../../stores/useAppStore';
 import {
   Badge,
@@ -176,8 +177,7 @@ export function AuctionDetailPage() {
 
   useEffect(() => {
     if (!auction?._id) return;
-    const apiBase = 'http://localhost:4000';
-    const socket = io(`${apiBase}/auctions`, {
+    const socket = io(`${API_BASE_URL}/auctions`, {
       transports: ['websocket', 'polling'],
       withCredentials: true,
     });

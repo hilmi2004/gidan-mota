@@ -1,5 +1,6 @@
 import { useAppStore } from '../stores/useAppStore';
 import { resolveDemoApiFallback } from './demoFallbackData';
+import { API_BASE_URL } from './config';
 
 export class ApiClientError extends Error {
   public readonly code: string;
@@ -31,7 +32,7 @@ export async function apiRequest<T>(
 
   let res: Response;
   try {
-    res = await fetch(`/api/v1${path}`, {
+    res = await fetch(`${API_BASE_URL}/api/v1${path}`, {
       ...options,
       headers,
       credentials: 'include',
@@ -43,13 +44,13 @@ export async function apiRequest<T>(
 
   const contentType = res.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
-    // Static SPA host (e.g. Vercel without external API proxy) returned text/html from rewrite
+    // Static SPA host returned text/html from rewrite
     return resolveDemoApiFallback<T>(path, options);
   }
 
   if (res.status === 401 && retry && refreshToken && !path.startsWith('/auth/')) {
     try {
-      const refreshRes = await fetch('/api/v1/auth/refresh', {
+      const refreshRes = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
