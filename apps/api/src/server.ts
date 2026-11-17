@@ -49,10 +49,10 @@ async function bootstrap(): Promise<void> {
     });
   });
 
-  httpServer.listen(env.PORT, () => {
+  httpServer.listen(env.PORT, '0.0.0.0', () => {
     logger.info(
       { port: env.PORT, docs: `http://localhost:${env.PORT}/api/docs` },
-      `${env.BRAND_NAME} API server listening on port ${env.PORT}`,
+      `${env.BRAND_NAME} API server listening on 0.0.0.0:${env.PORT}`,
     );
   });
 }

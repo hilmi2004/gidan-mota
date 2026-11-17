@@ -103,12 +103,13 @@ export async function connectDatabase(customDbName?: string): Promise<void> {
   }
   if (mongoose.connection.readyState === 1) return;
 
-  const dbName = customDbName ?? (env.NODE_ENV === 'test' ? `autodey_test_${process.pid}` : 'autodey');
+  const uriHasDb = /mongodb(\+srv)?:\/\/[^\/]+\/([^?]+)/i.test(env.MONGODB_URI);
+  const dbName = customDbName ?? (env.NODE_ENV === 'test' ? `autodey_test_${process.pid}` : (uriHasDb ? undefined : 'autodey'));
 
   if (env.USE_LOCAL_EMBEDDED_INFRA) {
     try {
       const port = env.NODE_ENV === 'test' ? 27029 : 27028;
-      const rsUri = await ensureLocalReplicaSet(port, dbName);
+      const rsUri = await ensureLocalReplicaSet(port, dbName || 'autodey');
       await mongoose.connect(rsUri);
       isReplicaSetSupported = true;
       logger.info({ uri: rsUri }, 'Connected to MongoDB Replica Set (transactions enabled)');
@@ -118,7 +119,11 @@ export async function connectDatabase(customDbName?: string): Promise<void> {
     }
   }
 
-  await mongoose.connect(env.MONGODB_URI, { dbName });
+  const options: mongoose.ConnectOptions = {};
+  if (dbName) {
+    options.dbName = dbName;
+  }
+  await mongoose.connect(env.MONGODB_URI, options);
   try {
     const hello = await mongoose.connection.db?.admin().command({ hello: 1 });
     isReplicaSetSupported = Boolean(hello?.setName);
