@@ -104,6 +104,7 @@ export function createApp(): Express {
   });
 
   app.use('/api/docs', docsRouter);
+  app.use('/docs', docsRouter);
   app.use('/api/v1/auth', authRouter);
   app.use('/api/v1/users', usersRouter);
   app.use('/api/v1', trustRouter);

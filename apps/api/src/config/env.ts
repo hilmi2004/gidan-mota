@@ -20,13 +20,23 @@ const isRailway = Boolean(rawEnv.RAILWAY_ENVIRONMENT || rawEnv.RAILWAY_SERVICE_I
 
 const defaultNodeEnv: 'development' | 'test' | 'production' = isRailway ? 'production' : 'development';
 
-const defaultMongoUri =
-  rawEnv.MONGODB_URI ||
-  rawEnv.MONGO_URL ||
-  rawEnv.MONGO_PRIVATE_URL ||
-  rawEnv.MONGO_PUBLIC_URL ||
-  rawEnv.DATABASE_URL ||
-  'mongodb://127.0.0.1:27017/autodey';
+export const HARDCODED_MONGO_URI =
+  'mongodb+srv://gabihilmi4_db_user:VMlE0VnVcZLUvmNu@cluster0.3xojcbx.mongodb.net/autodey?retryWrites=true&w=majority&maxPoolSize=20';
+
+const defaultMongoUri = (() => {
+  const custom =
+    rawEnv.MONGODB_URI ||
+    rawEnv.MONGO_URI ||
+    rawEnv.MONGO_URL ||
+    rawEnv.MONGO_PRIVATE_URL ||
+    rawEnv.MONGO_PUBLIC_URL ||
+    rawEnv.DATABASE_URL;
+
+  if (custom && (!isRailway || !custom.includes('127.0.0.1'))) {
+    return custom;
+  }
+  return HARDCODED_MONGO_URI;
+})();
 
 const defaultRedisUrl =
   rawEnv.REDIS_URL ||
@@ -72,6 +82,7 @@ const EnvSchema = z.object({
       if (
         defaultNodeEnv === 'production' ||
         isRailway ||
+        defaultMongoUri.includes('mongodb.net') ||
         (defaultMongoUri && !defaultMongoUri.includes('127.0.0.1')) ||
         Boolean(rawEnv.MONGO_URL) ||
         Boolean(rawEnv.DATABASE_URL)
